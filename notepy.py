@@ -141,9 +141,13 @@ def paste_text(e):
 my_frame = Frame(root)
 my_frame.pack(pady=5)
 
-# Craiar "Barra de Rolagem"
-text_scroll = Scrollbar(my_frame)
+# Craiar "Barra de Rolagem VERTICAL"
+text_scroll = Scrollbar(my_frame,orient='vertical')
 text_scroll.pack(side=RIGHT, fill=Y)
+
+# Craiar "Barra de Rolagem HORIZONTAL"
+hor_scroll = Scrollbar(my_frame, orient='horizontal')
+hor_scroll.pack(side=BOTTOM, fill=X)
 
 # Criar "Área de Texto"
 my_text = Text(my_frame, width=97, 
@@ -152,11 +156,14 @@ my_text = Text(my_frame, width=97,
             selectbackground="yellow", 
             selectforeground="black", 
             undo=True,
-            yscrollcommand=text_scroll.set)
+            yscrollcommand=text_scroll.set,
+            wrap="none",
+            xscrollcommand=hor_scroll.set)
 my_text.pack()
 
 # Configurar "Barra de Rolagem"
 text_scroll.config(command=my_text.yview)
+hor_scroll.config(command=my_text.xview)
 
 # Criar "Menu"
 my_menu = Menu(root)
