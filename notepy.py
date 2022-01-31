@@ -97,21 +97,43 @@ def save_file():
 # Menu "CUTE"
 def cut_text(e):
     global selected
-    if my_text.selection_get():
-        # pegar o texto selecionado
-        selected = my_text.selection_get()
-        # apagar o texto selecionado
-        my_text.delete("sel.first", "sel.last")
+    # Check se utilizamos o atalho de teclado
+    if e:
+        selected = root.clipboard_get()
+    else: 
+        if my_text.selection_get():
+            # pegar o texto selecionado
+            selected = my_text.selection_get()
+            # apagar o texto selecionado
+            my_text.delete("sel.first", "sel.last")
+            # Limpar a área de transferencia 
+            root.clipboard_clear()
+            root.clipboard_append(selected)
 
 # Menu "COPY"
 def copy_text(e):
-    pass
+    global selected
+    # Check se utilizamos o atalho de teclado
+    if e:
+        selected = root.clipboard_get()
+    else: 
+        if my_text.selection_get():
+            # pegar o texto selecionado
+            selected = my_text.selection_get()
+            # Limpar a área de transferencia 
+            root.clipboard_clear()
+            root.clipboard_append(selected)
 
 # Menu "PASTE"
 def paste_text(e):
-    if selected:
-        position = my_text.index(INSERT)
-        my_text.insert(position, selected)
+    global selected
+    # Check se utilizamos o atalho de teclado
+    if e:
+        selected = root.clipboard_get()
+    else:
+        if selected:
+            position = my_text.index(INSERT)
+            my_text.insert(position, selected)
 
 
 
@@ -124,8 +146,12 @@ text_scroll = Scrollbar(my_frame)
 text_scroll.pack(side=RIGHT, fill=Y)
 
 # Criar "Área de Texto"
-my_text = Text(my_frame, width=97, height=25, font=("Arial", 16), 
-            selectbackground="yellow", selectforeground="black", undo=True, 
+my_text = Text(my_frame, width=97, 
+            height=25, 
+            font=("Arial", 16),
+            selectbackground="yellow", 
+            selectforeground="black", 
+            undo=True,
             yscrollcommand=text_scroll.set)
 my_text.pack()
 
@@ -139,24 +165,31 @@ root.config(menu=my_menu)
 # Menu "FILE"
 file_menu = Menu(my_menu, tearoff=False)
 my_menu.add_cascade(label="File", menu=file_menu)
-file_menu.add_command(label="New", command=new_file)
-file_menu.add_command(label="Open", command=open_file)
-file_menu.add_command(label="Save", command=save_file)
-file_menu.add_command(label="Save As",command=save_as_file)
+file_menu.add_command(label="New", command=new_file, accelerator="Command+N")
+file_menu.add_command(label="Open", command=open_file, accelerator="Command+O")
+file_menu.add_command(label="Save", command=save_file, accelerator="Command+S")
+file_menu.add_command(label="Save As     ",command=save_as_file, accelerator="Command+Shit+S")
 file_menu.add_separator()
-file_menu.add_command(label="Exit", command=root.quit)
+file_menu.add_command(label="Exit", command=root.quit, accelerator="Command+X")
 
 # Menu "EDIT"
 edit_menu = Menu(my_menu, tearoff=False)
 my_menu.add_cascade(label="Edit", menu=edit_menu)
-edit_menu.add_command(label="Cut", command=lambda: cut_text(False))
-edit_menu.add_command(label="Copy", command=lambda: copy_text(False))
-edit_menu.add_command(label="Past", command=lambda: paste_text(False))
-edit_menu.add_command(label="Undo")
-edit_menu.add_command(label="Redo")
+edit_menu.add_command(label="Cut", command=lambda: cut_text(False), accelerator="Command+X")
+edit_menu.add_command(label="Copy", command=lambda: copy_text(False), accelerator="Command+C")
+edit_menu.add_command(label="Past        ", command=lambda: paste_text(False), accelerator="Command+V")
+edit_menu.add_separator()
+edit_menu.add_command(label="Undo", command=my_text.edit_undo, accelerator="Command+Z")
+edit_menu.add_command(label="Redo", command=my_text.edit_redo, accelerator="Command+Y")
 
 # Criar "Status Bar"
 status_bar = Label(root, text='.: Pronto :.')
 status_bar.pack(fill=X, side=BOTTOM, ipady=5)
+
+# Editando ligações
+root.bind('<Control-Key-X>',cut_text)
+root.bind('<Control-Key-C>',copy_text)
+root.bind('<Control-Key-V>',paste_text)
+
 
 root.mainloop()
