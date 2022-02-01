@@ -32,7 +32,7 @@ def open_file():
     # Limpar a tela de texto primeiro
     my_text.delete(1.0, END)
     # Pegar o nome do Arquivo
-    text_file = filedialog.askopenfilename(initialdir='/Users/marceloassim/Documents',
+    text_file = filedialog.askopenfilename(initialdir='<DIRETÓRIO LOCAL>',
                                         title='Open File', 
                                         filetypes=(("Text Files", "*.txt"),
                                                     ("HTML Files", "*.html"), 
@@ -48,7 +48,7 @@ def open_file():
     name= text_file    
     # Alterando o Status Bar
     status_bar.config(text=f'{name}')
-    name.replace('/Users/marceloassim/Documents', '')
+    name.replace('<DIRETÓRIO LOCAL>', '')
     root.title(f'{name} - NotePy')
     
     # Abrindo o arquivo
@@ -62,7 +62,7 @@ def open_file():
 # Menu "SAVE AS"
 def save_as_file():
     text_file = filedialog.asksaveasfilename(defaultextension=".*",
-                                            initialdir='/Users/marceloassim/Documents',
+                                            initialdir='<DIRETÓRIO LOCAL>',
                                             title="Save As File", 
                                             filetypes=(("Text Files", "*.txt"),
                                                         ("HTML Files", "*.html"), 
@@ -71,7 +71,7 @@ def save_as_file():
     if text_file:
         name= text_file
         status_bar.config(text=f'Saved: {name}')
-        name.replace('/Users/marceloassim/Documents', '')
+        name.replace('<DIRETÓRIO LOCAL>', '')
         root.title(f'{name} - NotePy')
         # Salvar o arquivo
         text_file = open(text_file, 'w')
